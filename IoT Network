@@ -1,0 +1,83 @@
+#include <DHT.h>
+#include <WiFiNINA.h>
+#include <PubSubClient.h>
+
+#define DHTPIN 2     // Digital pin connected to the DHT sensor
+#define DHTTYPE DHT11 // DHT 11
+
+DHT dht(DHTPIN, DHTTYPE);
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+const char* ssid = "Your_SSID";
+const char* password = "Your_Password";
+const char* mqtt_server = "Your_MQTT_Server_IP";
+const int mqtt_port = 1883;
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  client.setServer(mqtt_server, mqtt_port);
+}
+
+void loop() {
+  // Read temperature and humidity from DHT sensor
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+
+  // Check if readings are valid
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  // Create a JSON payload
+  String payload = "{\"temperature\": " + String(t) + ", \"humidity\": " + String(h) + "}";
+
+  // Connect to MQTT broker
+  if (!client.connected()) {
+    reconnect();
+  }
+
+  // Publish the payload to an MQTT topic
+  client.publish("duckweed_data", payload.c_str());
+
+  Serial.print("Humidity: ");
+  Serial.print(h);
+  Serial.print(" %\t");
+  Serial.print("Temperature: ");
+  Serial.print(t);
+  Serial.println(" *C ");
+
+  delay(2000);
+}
+
+void reconnect() {
+  // Loop until we're reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    if (client.connect("ESP8266Client")) {
+      Serial.println("connected");
+      // Once connected, publish an announcement...
+      client.publish("duckweed_data", "connected");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
