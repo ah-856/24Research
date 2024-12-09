@@ -4,7 +4,7 @@ This repository contains the code and documentation for an Arduino-based system 
 
  Features:
 
-Sensor Integration:**
+Sensor Integration:
   - DHT11 for temperature and humidity
   - BME280 for temperature, humidity, and pressure
   - ADS1115 for pH and conductivity measurements
@@ -28,7 +28,4 @@ Software Requirements:
 * Libraries for DHT, BME280, and ADS1115 sensors
 * MQTT library for Wi-Fi communication
 
- Getting Started:
-1. Clone the repository:**
-   ```bash
-   git clone [invalid URL removed]
+ 
