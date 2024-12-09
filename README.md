@@ -8,10 +8,10 @@ Sensor Integration:**
   - DHT11 for temperature and humidity
   - BME280 for temperature, humidity, and pressure
   - ADS1115 for pH and conductivity measurements
- Data Acquisition and Processing:**
+ Data Acquisition and Processing:
    - Reads sensor data at regular intervals
   - Processes and filters the data
-Wireless Communication:**
+Wireless Communication:
   - Uses Wi-Fi to connect to the internet
   - Sends sensor data to an MQTT broker
 
