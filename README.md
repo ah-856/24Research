@@ -1,4 +1,4 @@
-#Arduino-Based Duckweed Monitoring System
+Arduino-Based Duckweed Monitoring System
 
 This repository contains the code and documentation for an Arduino-based system designed to monitor various parameters in a duckweed cultivation environment.
 
